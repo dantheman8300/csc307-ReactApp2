@@ -3,6 +3,8 @@ import express from 'express';
 const app = express();
 const port = 3001;
 
+//================================User data====================================
+
 const users = { 
   users_list :
   [
@@ -34,6 +36,8 @@ const users = {
   ]
 }
 
+//============================Getters and setters==============================
+
 const findUserByName = (name: string) => {
   return users.users_list.filter((user) => {
     return user.name === name;
@@ -45,6 +49,12 @@ const findUserById = (id: string) => {
     return user.id === id;
   });
 }
+
+function addUser(user){
+  users['users_list'].push(user);
+}
+
+//============================Server functionality=============================
 
 app.use(express.json());
 
@@ -72,7 +82,13 @@ app.get('/users/:id', (req, res) => {
     const results = {users_list: resultsFromId};
     res.send(results);
   }
-})
+});
+
+app.post('/users', (req, res) => {
+  const userToAdd = req.body;
+  addUser(userToAdd);
+  res.status(200).end();
+});
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
