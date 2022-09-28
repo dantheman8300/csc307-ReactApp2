@@ -5,6 +5,12 @@ const port = 3001;
 
 //================================User data====================================
 
+type User = {
+  id: string, 
+  name: string, 
+  job: string
+}
+
 const users = { 
   users_list :
   [
@@ -50,8 +56,14 @@ const findUserById = (id: string) => {
   });
 }
 
-function addUser(user){
-  users['users_list'].push(user);
+function addUser(user: User){
+  users.users_list.push(user);
+}
+
+function removeUser(id: string) {
+  users.users_list = users.users_list.filter((user: User) => {
+    return user.id !== id;
+  })
 }
 
 //============================Server functionality=============================
@@ -87,6 +99,12 @@ app.get('/users/:id', (req, res) => {
 app.post('/users', (req, res) => {
   const userToAdd = req.body;
   addUser(userToAdd);
+  res.status(200).end();
+});
+
+app.delete('/users/:id', (req, res) => {
+  const id = req.params.id;
+  removeUser(id);
   res.status(200).end();
 });
 
