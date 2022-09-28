@@ -1,5 +1,4 @@
 import React, {useState} from 'react';
-import { propTypes } from 'react-responsive-navbar';
 
 function Form (props) {
   const [person, setPerson] = useState(
