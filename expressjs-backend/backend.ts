@@ -45,14 +45,20 @@ const users = {
 //============================Getters and setters==============================
 
 const findUserByName = (name: string) => {
-  return users.users_list.filter((user) => {
+  return users.users_list.filter((user: User) => {
     return user.name === name;
   });
 }
 
 const findUserById = (id: string) => {
-  return users.users_list.filter((user) => {
+  return users.users_list.filter((user: User) => {
     return user.id === id;
+  });
+}
+
+const findUserByNameAndId = (name: string, job: string) => {
+  return users.users_list.filter((user: User) => {
+    return user.job === job && user.name === name;
   });
 }
 
@@ -76,13 +82,20 @@ app.get('/', (req, res) => {
 
 app.get('/users', (req, res) =>{
   const name = req.query.name as string;
-  if (name != undefined) {
-    const resultFromName = findUserByName(name);
-    const results = {users_list: resultFromName};
-    res.send(results);
+  const job = req.query.job as string;
+
+  let results: {users_list: User[]};
+  if (name != undefined && job != undefined) {
+    const resultsFromNameAndId = findUserByNameAndId(name, job);
+    results = {users_list: resultsFromNameAndId};
+  } else if (name != undefined) {
+    const resultsFromName = findUserByName(name);
+    results = {users_list: resultsFromName};
   } else {
-    res.send(users);
+    results = users;
   }
+
+  res.send(results);
 })
 
 app.get('/users/:id', (req, res) => {
