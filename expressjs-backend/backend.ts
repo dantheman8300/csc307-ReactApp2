@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import e from 'express';
 
 const app = express();
 const port = 3001;
@@ -68,9 +69,16 @@ function addUser(user: User){
 }
 
 function removeUser(id: string) {
-  users.users_list = users.users_list.filter((user: User) => {
-    return user.id !== id;
-  })
+  const userIndexToRemove = users.users_list.findIndex(user => user.id === id);
+  if (userIndexToRemove === -1) {
+    return false;
+  } 
+  users.users_list.splice(userIndexToRemove, 1);
+  return true;
+}
+
+function generateId(): string {
+  return (Math.random() + 1).toString(36).substring(6);
 }
 
 //============================Server functionality=============================
@@ -112,15 +120,25 @@ app.get('/users/:id', (req, res) => {
 });
 
 app.post('/users', (req, res) => {
-  const userToAdd = req.body;
+  const newUserInfo = req.body as {name: string, job: string};
+  const newId = generateId();
+  const userToAdd = {
+    id: newId,
+    name: newUserInfo.name, 
+    job: newUserInfo.job
+  }
   addUser(userToAdd);
-  res.status(200).end();
+  res.status(201).send(userToAdd).end();
 });
 
 app.delete('/users/:id', (req, res) => {
   const id = req.params.id;
-  removeUser(id);
-  res.status(200).end();
+  const didFind = removeUser(id);
+  if (didFind) {
+    res.status(204).end();
+  } else {
+    res.status(404).end();
+  }
 });
 
 app.listen(port, () => {
