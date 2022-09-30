@@ -33,7 +33,21 @@ function MyApp() {
   }
 
   function updateList (person) {
-    setCharacters([...characters, person])
+    makePostCall(person).then(result => {
+      if (result && result.status === 200) {
+        setCharacters([...characters, person]);
+      }
+    });
+  }
+
+  async function makePostCall (person) {
+    try {
+      const response = await axios.post('http://localhost:3001/users', person);
+      return response;
+    } catch (error) {
+      console.log(error);
+      return false;
+    }
   }
 
   return (
