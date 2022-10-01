@@ -168,9 +168,9 @@ app.delete('/users/:id', (req, res) => {
   const id = req.params.id;
 
   // Try to remove user with corresponding id
-  const didFind = removeUser(id);
+  const didFindAndRemovedUser = removeUser(id);
 
-  if (didFind) { // User was successfully removed
+  if (didFindAndRemovedUser) { // User was successfully removed
     res.status(204).end();
   } else { // No user with id was found
     res.status(404).end();
