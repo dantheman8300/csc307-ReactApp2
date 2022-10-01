@@ -13,6 +13,7 @@ async function fetchAll () {
   }
 }
 
+// MyApp component
 function MyApp() { 
 
   const [characters, setCharacters] = useState([]);
@@ -25,8 +26,11 @@ function MyApp() {
     });
   }, []);
 
+  
   function removeOneCharacter (index) {
+    // Get id for user at index
     const idToRemove = characters[index].id;
+
     makeDeleteCall(idToRemove).then( result => {
       if (result && result.status === 204) {
         characters.splice(index, 1);
